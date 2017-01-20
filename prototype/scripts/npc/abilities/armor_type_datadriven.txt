@@ -1,0 +1,209 @@
+"teve_armor_type_light"
+{
+	// General
+	// -------------------------------------------------------------------------------------------------------------------
+	"BaseClass"						"ability_datadriven"
+	"MaxLevel"						"1"
+	"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN"
+	
+	// Special
+	// -------------------------------------------------------------------------------------------------------------------
+	"AbilitySpecial"
+	{
+		"01"
+		{
+			"var_type"				"FIELD_INTEGER"
+			"ArmorType"				"0"
+		}
+	}
+	
+	// Data driven
+	// -------------------------------------------------------------------------------------------------------------------
+	"Modifiers"
+	{
+		"modifier_armor_type_light"
+		{
+			"Passive"					"1"
+			"IsPurgable"				"0"
+			"IsHidden"					"0"
+			
+			"OnCreated"
+			{
+				"RunScript"
+				{
+					"ScriptFile"					"system/stat.lua"
+					"Function"						"assign_armor"
+					"armor_type"					"%ArmorType"
+				}
+			}
+		}
+	}
+}
+
+"teve_armor_type_heavy"
+{
+	// General
+	// -------------------------------------------------------------------------------------------------------------------
+	"BaseClass"						"ability_datadriven"
+	"MaxLevel"						"1"
+	"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN"
+	
+	// Special
+	// -------------------------------------------------------------------------------------------------------------------
+	"AbilitySpecial"
+	{
+		"01"
+		{
+			"var_type"				"FIELD_INTEGER"
+			"ArmorType"				"1"
+		}
+	}
+	
+	// Data driven
+	// -------------------------------------------------------------------------------------------------------------------
+	"Modifiers"
+	{
+		"modifier_armor_type_heavy"
+		{
+			"Passive"					"1"
+			"IsPurgable"				"0"
+			"IsHidden"					"0"
+			
+			"OnCreated"
+			{
+				"RunScript"
+				{
+					"ScriptFile"					"system/stat.lua"
+					"Function"						"assign_armor"
+					"armor_type"					"%ArmorType"
+				}
+			}
+		}
+	}
+}
+
+"teve_armor_type_magic"
+{
+	// General
+	// -------------------------------------------------------------------------------------------------------------------
+	"BaseClass"						"ability_datadriven"
+	"MaxLevel"						"1"
+	"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN"
+	
+	// Special
+	// -------------------------------------------------------------------------------------------------------------------
+	"AbilitySpecial"
+	{
+		"01"
+		{
+			"var_type"				"FIELD_INTEGER"
+			"ArmorType"				"2"
+		}
+	}
+	
+	// Data driven
+	// -------------------------------------------------------------------------------------------------------------------
+	"Modifiers"
+	{
+		"modifier_armor_type_magic"
+		{
+			"Passive"					"1"
+			"IsPurgable"				"0"
+			"IsHidden"					"0"
+			
+			"OnCreated"
+			{
+				"RunScript"
+				{
+					"ScriptFile"					"system/stat.lua"
+					"Function"						"assign_armor"
+					"armor_type"					"%ArmorType"
+				}
+			}
+		}
+	}
+}
+
+"teve_armor_type_chaos"
+{
+	// General
+	// -------------------------------------------------------------------------------------------------------------------
+	"BaseClass"						"ability_datadriven"
+	"MaxLevel"						"1"
+	"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN"
+	
+	// Special
+	// -------------------------------------------------------------------------------------------------------------------
+	"AbilitySpecial"
+	{
+		"01"
+		{
+			"var_type"				"FIELD_INTEGER"
+			"ArmorType"				"3"
+		}
+	}
+	
+	// Data driven
+	// -------------------------------------------------------------------------------------------------------------------
+	"Modifiers"
+	{
+		"modifier_armor_type_chaos"
+		{
+			"Passive"					"1"
+			"IsPurgable"				"0"
+			"IsHidden"					"0"
+			
+			"OnCreated"
+			{
+				"RunScript"
+				{
+					"ScriptFile"					"system/stat.lua"
+					"Function"						"assign_armor"
+					"armor_type"					"%ArmorType"
+				}
+			}
+		}
+	}
+}
+
+"teve_armor_type_divine"
+{
+	// General
+	// -------------------------------------------------------------------------------------------------------------------
+	"BaseClass"						"ability_datadriven"
+	"MaxLevel"						"1"
+	"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN"
+	
+	// Special
+	// -------------------------------------------------------------------------------------------------------------------
+	"AbilitySpecial"
+	{
+		"01"
+		{
+			"var_type"				"FIELD_INTEGER"
+			"ArmorType"				"4"
+		}
+	}
+	
+	// Data driven
+	// -------------------------------------------------------------------------------------------------------------------
+	"Modifiers"
+	{
+		"modifier_armor_type_divine"
+		{
+			"Passive"					"1"
+			"IsPurgable"				"0"
+			"IsHidden"					"0"
+			
+			"OnCreated"
+			{
+				"RunScript"
+				{
+					"ScriptFile"					"system/stat.lua"
+					"Function"						"assign_armor"
+					"armor_type"					"%ArmorType"
+				}
+			}
+		}
+	}
+}

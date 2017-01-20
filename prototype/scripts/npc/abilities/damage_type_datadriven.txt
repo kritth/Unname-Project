@@ -1,0 +1,419 @@
+"teve_damage_type_normal"
+{
+	// General
+	// -------------------------------------------------------------------------------------------------------------------
+	"BaseClass"						"ability_datadriven"
+	"MaxLevel"						"1"
+	"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN"
+	
+	// Special
+	// -------------------------------------------------------------------------------------------------------------------
+	"AbilitySpecial"
+	{
+		"01"
+		{
+			"var_type"				"FIELD_INTEGER"
+			"DamageType"			"0"
+		}
+	}
+	
+	// Data driven
+	// -------------------------------------------------------------------------------------------------------------------
+	"Modifiers"
+	{
+		"modifier_damage_type_normal"
+		{
+			"Passive"					"1"
+			"IsPurgable"				"0"
+			"IsHidden"					"0"
+			
+			"OnCreated"
+			{
+				"RunScript"
+				{
+					"ScriptFile"					"system/stat.lua"
+					"Function"						"assign_damage"
+					"damage_type"					"%DamageType"
+				}
+			}
+		}
+	}
+}
+
+"teve_damage_type_hero"
+{
+	// General
+	// -------------------------------------------------------------------------------------------------------------------
+	"BaseClass"						"ability_datadriven"
+	"MaxLevel"						"1"
+	"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN"
+	
+	// Special
+	// -------------------------------------------------------------------------------------------------------------------
+	"AbilitySpecial"
+	{
+		"01"
+		{
+			"var_type"				"FIELD_INTEGER"
+			"DamageType"			"1"
+		}
+	}
+	
+	// Data driven
+	// -------------------------------------------------------------------------------------------------------------------
+	"Modifiers"
+	{
+		"modifier_damage_type_hero"
+		{
+			"Passive"					"1"
+			"IsPurgable"				"0"
+			"IsHidden"					"0"
+			
+			"OnCreated"
+			{
+				"RunScript"
+				{
+					"ScriptFile"					"system/stat.lua"
+					"Function"						"assign_damage"
+					"damage_type"					"%DamageType"
+				}
+			}
+		}
+	}
+}
+
+"teve_damage_type_piercing"
+{
+	// General
+	// -------------------------------------------------------------------------------------------------------------------
+	"BaseClass"						"ability_datadriven"
+	"MaxLevel"						"1"
+	"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN"
+	
+	// Special
+	// -------------------------------------------------------------------------------------------------------------------
+	"AbilitySpecial"
+	{
+		"01"
+		{
+			"var_type"				"FIELD_INTEGER"
+			"DamageType"			"2"
+		}
+	}
+	
+	// Data driven
+	// -------------------------------------------------------------------------------------------------------------------
+	"Modifiers"
+	{
+		"modifier_damage_type_piercing"
+		{
+			"Passive"					"1"
+			"IsPurgable"				"0"
+			"IsHidden"					"0"
+			
+			"OnCreated"
+			{
+				"RunScript"
+				{
+					"ScriptFile"					"system/stat.lua"
+					"Function"						"assign_damage"
+					"damage_type"					"%DamageType"
+				}
+			}
+		}
+	}
+}
+
+"teve_damage_type_blunt"
+{
+	// General
+	// -------------------------------------------------------------------------------------------------------------------
+	"BaseClass"						"ability_datadriven"
+	"MaxLevel"						"1"
+	"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN"
+	
+	// Special
+	// -------------------------------------------------------------------------------------------------------------------
+	"AbilitySpecial"
+	{
+		"01"
+		{
+			"var_type"				"FIELD_INTEGER"
+			"DamageType"			"3"
+		}
+	}
+	
+	// Data driven
+	// -------------------------------------------------------------------------------------------------------------------
+	"Modifiers"
+	{
+		"modifier_damage_type_blunt"
+		{
+			"Passive"					"1"
+			"IsPurgable"				"0"
+			"IsHidden"					"0"
+			
+			"OnCreated"
+			{
+				"RunScript"
+				{
+					"ScriptFile"					"system/stat.lua"
+					"Function"						"assign_damage"
+					"damage_type"					"%DamageType"
+				}
+			}
+		}
+	}
+}
+
+"teve_damage_type_chaos"
+{
+	// General
+	// -------------------------------------------------------------------------------------------------------------------
+	"BaseClass"						"ability_datadriven"
+	"MaxLevel"						"1"
+	"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN"
+	
+	// Special
+	// -------------------------------------------------------------------------------------------------------------------
+	"AbilitySpecial"
+	{
+		"01"
+		{
+			"var_type"				"FIELD_INTEGER"
+			"DamageType"			"4"
+		}
+	}
+	
+	// Data driven
+	// -------------------------------------------------------------------------------------------------------------------
+	"Modifiers"
+	{
+		"modifier_damage_type_chaos"
+		{
+			"Passive"					"1"
+			"IsPurgable"				"0"
+			"IsHidden"					"0"
+			
+			"OnCreated"
+			{
+				"RunScript"
+				{
+					"ScriptFile"					"system/stat.lua"
+					"Function"						"assign_damage"
+					"damage_type"					"%DamageType"
+				}
+			}
+		}
+	}
+}
+
+"teve_damage_type_magic"
+{
+	// General
+	// -------------------------------------------------------------------------------------------------------------------
+	"BaseClass"						"ability_datadriven"
+	"MaxLevel"						"1"
+	"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN"
+	
+	// Special
+	// -------------------------------------------------------------------------------------------------------------------
+	"AbilitySpecial"
+	{
+		"01"
+		{
+			"var_type"				"FIELD_INTEGER"
+			"DamageType"			"5"
+		}
+	}
+	
+	// Data driven
+	// -------------------------------------------------------------------------------------------------------------------
+	"Modifiers"
+	{
+		"modifier_damage_type_magic"
+		{
+			"Passive"					"1"
+			"IsPurgable"				"0"
+			"IsHidden"					"0"
+			
+			"OnCreated"
+			{
+				"RunScript"
+				{
+					"ScriptFile"					"system/stat.lua"
+					"Function"						"assign_damage"
+					"damage_type"					"%DamageType"
+				}
+			}
+		}
+	}
+}
+
+"teve_damage_type_universal"
+{
+	// General
+	// -------------------------------------------------------------------------------------------------------------------
+	"BaseClass"						"ability_datadriven"
+	"MaxLevel"						"1"
+	"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN"
+	
+	// Special
+	// -------------------------------------------------------------------------------------------------------------------
+	"AbilitySpecial"
+	{
+		"01"
+		{
+			"var_type"				"FIELD_INTEGER"
+			"DamageType"			"6"
+		}
+	}
+	
+	// Data driven
+	// -------------------------------------------------------------------------------------------------------------------
+	"Modifiers"
+	{
+		"modifier_damage_type_universal"
+		{
+			"Passive"					"1"
+			"IsPurgable"				"0"
+			"IsHidden"					"0"
+			
+			"OnCreated"
+			{
+				"RunScript"
+				{
+					"ScriptFile"					"system/stat.lua"
+					"Function"						"assign_damage"
+					"damage_type"					"%DamageType"
+				}
+			}
+		}
+	}
+}
+
+"teve_damage_type_composite"
+{
+	// General
+	// -------------------------------------------------------------------------------------------------------------------
+	"BaseClass"						"ability_datadriven"
+	"MaxLevel"						"1"
+	"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN"
+	
+	// Special
+	// -------------------------------------------------------------------------------------------------------------------
+	"AbilitySpecial"
+	{
+		"01"
+		{
+			"var_type"				"FIELD_INTEGER"
+			"DamageType"			"7"
+		}
+	}
+	
+	// Data driven
+	// -------------------------------------------------------------------------------------------------------------------
+	"Modifiers"
+	{
+		"modifier_damage_type_composite"
+		{
+			"Passive"					"1"
+			"IsPurgable"				"0"
+			"IsHidden"					"0"
+			
+			"OnCreated"
+			{
+				"RunScript"
+				{
+					"ScriptFile"					"system/stat.lua"
+					"Function"						"assign_damage"
+					"damage_type"					"%DamageType"
+				}
+			}
+		}
+	}
+}
+
+"teve_damage_type_pure"
+{
+	// General
+	// -------------------------------------------------------------------------------------------------------------------
+	"BaseClass"						"ability_datadriven"
+	"MaxLevel"						"1"
+	"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN"
+	
+	// Special
+	// -------------------------------------------------------------------------------------------------------------------
+	"AbilitySpecial"
+	{
+		"01"
+		{
+			"var_type"				"FIELD_INTEGER"
+			"DamageType"			"8"
+		}
+	}
+	
+	// Data driven
+	// -------------------------------------------------------------------------------------------------------------------
+	"Modifiers"
+	{
+		"modifier_damage_type_pure"
+		{
+			"Passive"					"1"
+			"IsPurgable"				"0"
+			"IsHidden"					"0"
+			
+			"OnCreated"
+			{
+				"RunScript"
+				{
+					"ScriptFile"					"system/stat.lua"
+					"Function"						"assign_damage"
+					"damage_type"					"%DamageType"
+				}
+			}
+		}
+	}
+}
+
+"teve_damage_type_hp_removal"
+{
+	// General
+	// -------------------------------------------------------------------------------------------------------------------
+	"BaseClass"						"ability_datadriven"
+	"MaxLevel"						"1"
+	"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN"
+	
+	// Special
+	// -------------------------------------------------------------------------------------------------------------------
+	"AbilitySpecial"
+	{
+		"01"
+		{
+			"var_type"				"FIELD_INTEGER"
+			"DamageType"			"9"
+		}
+	}
+	
+	// Data driven
+	// -------------------------------------------------------------------------------------------------------------------
+	"Modifiers"
+	{
+		"modifier_damage_type_hp_removal"
+		{
+			"Passive"					"1"
+			"IsPurgable"				"0"
+			"IsHidden"					"0"
+			
+			"OnCreated"
+			{
+				"RunScript"
+				{
+					"ScriptFile"					"system/stat.lua"
+					"Function"						"assign_damage"
+					"damage_type"					"%DamageType"
+				}
+			}
+		}
+	}
+}
