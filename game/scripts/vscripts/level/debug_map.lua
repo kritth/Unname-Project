@@ -8,60 +8,6 @@ for i = 1, 299 do
 	XP_PER_LEVEL_TABLE[i] = XP_PER_LEVEL_TABLE[i - 1] * 1.5 + 200
 end
 
-function DebugMap:InitGameMode()
-	GameRules:SetTreeRegrowTime( 10.0 )
-	
-	local mode = GameRules:GetGameModeEntity()
-	mode:SetAnnouncerDisabled( true )
-	mode:SetFixedRespawnTime( 1.0 )
-	mode:SetFogOfWarDisabled( true )
-	mode:SetCustomXPRequiredToReachNextLevel(XP_PER_LEVEL_TABLE)
-	mode:SetUseCustomHeroLevels(true)
-	mode:SetCustomHeroMaxLevel(299)
-	
-	ListenToGameEvent( "npc_spawned", Dynamic_Wrap( DebugMap, "OnUnitSpawned" ), self )
-	
-	DebugMap:AddDebugMapCommands()
-end
-
-local once = false
-
-function DebugMap:OnGameInProgress()
-	if once == false then
-		CampSpawner:Init()
-		once = true
-	end
-end
-
-function DebugMap:OnUnitSpawned( keys )
-	local unit = EntIndexToHScript( keys.entindex )
-	if unit.cstat == nil and unit:GetUnitName() ~= "npc_dummy_unit" then
-		-- Attach stat
-		unit.stat = Stat:new( keys.entindex )
-		
-		-- Attaching necessary system
-		local ability_name = "teve_stat"
-		local mod = {}
-		mod[1] = "modifier_negate_health"
-		mod[2] = "modifier_negate_armor"
-		mod[3] = "modifier_negate_mana"
-		mod[4] = "modifier_health_regen"
-		mod[5] = "modifier_mana_regen"
-		mod[6] = "modifier_refund_health"
-		
-		unit:AddAbility(ability_name)
-		local ability = unit:FindAbilityByName(ability_name)
-		if ability ~= nil then
-			ability:SetLevel(1)
-			for k, v in pairs(mod) do
-				ability:ApplyDataDrivenModifier(unit, unit, v, { duration = -1 })
-			end
-		end
-		
-		unit:RemoveAbility(ability_name)
-	end
-end
-
 function DebugMap:AddDebugMapCommands()
 	Convars:RegisterCommand("damage_self", function( cmd )
 			return DebugMap:DamageSelf()
@@ -82,6 +28,14 @@ function DebugMap:AddDebugMapCommands()
 	Convars:RegisterCommand("create_unit", function( cmd )
 			return DebugMap:CreateUnit()
 		end, "Create unit", FCVAR_CHEAT
+	)
+	Convars:RegisterCommand("add_resource", function( cmd )
+			return DebugMap:AddResource()
+		end, "Add resource", FCVAR_CHEAT
+	)
+	Convars:RegisterCommand("spend_resource", function( cmd )
+			return DebugMap:SpendResource()
+		end, "Spend resource", FCVAR_CHEAT
 	)
 end
 
@@ -129,4 +83,73 @@ end
 function DebugMap:CreateUnit()
 	local hero = PlayerResource:GetPlayer( tonumber(0) ):GetAssignedHero()
 	CreateUnitByName("npc_dota_creature_gnoll_assassin", hero:GetAbsOrigin(), true, hero, hero, DOTA_TEAM_NEUTRALS)
+end
+
+function DebugMap:AddResource()
+	Economy:ModifyResource(0, 100, 100)
+end
+
+function DebugMap:SpendResource()
+	Economy:ModifyResource(0, -100, -100)
+end
+
+-- Transferable codes
+
+function DebugMap:InitGameMode()
+	GameRules:SetTreeRegrowTime( 10.0 )
+	GameRules:SetFirstBloodActive(false)
+	GameRules:SetCustomGameTeamMaxPlayers( DOTA_TEAM_GOODGUYS, 10 )
+    GameRules:SetCustomGameTeamMaxPlayers( DOTA_TEAM_BADGUYS, 0 )
+	
+	local mode = GameRules:GetGameModeEntity()
+	mode:SetAnnouncerDisabled( true )
+	mode:SetFixedRespawnTime( 1.0 )
+	mode:SetFogOfWarDisabled( true )
+	mode:SetTopBarTeamValuesVisible(false)
+    mode:SetBuybackEnabled(false)
+	mode:SetStashPurchasingDisabled(true)
+	
+	-- Leveling setup
+	mode:SetCustomXPRequiredToReachNextLevel(XP_PER_LEVEL_TABLE)
+	mode:SetUseCustomHeroLevels(true)
+	mode:SetCustomHeroMaxLevel(299)
+	
+	-- Class setup
+	GameRules:SetSameHeroSelectionEnabled(true)
+	
+	-- Economy set up
+	GameRules:SetStartingGold(0)
+	GameRules:SetGoldPerTick(0)
+	mode:SetLoseGoldOnDeath(false)
+	
+	-- Battle system setup
+	ListenToGameEvent( "npc_spawned", Dynamic_Wrap( DebugMap, "OnUnitSpawned" ), self )
+	
+	-- Debug command added
+	DebugMap:AddDebugMapCommands()
+end
+
+local once = false
+
+function DebugMap:OnGameInProgress()
+	if once == false then
+		CampSpawner:Init()
+		Economy:Init()
+		once = true
+	end
+end
+
+function DebugMap:OnUnitSpawned( keys )
+	local unit = EntIndexToHScript( keys.entindex )
+	if unit.cstat == nil and 
+		( -- List of dummies
+			unit:GetUnitName() ~= "npc_dummy_unit" or
+			unit:GetUnitName() ~= "npc_dummy_spawner"
+		) then
+		-- Attach stat
+		Stat:Attach(unit)
+		
+		-- Initialize economy system for player if not existed
+		Economy:AddResource(unit:GetPlayerOwnerID())
+	end
 end

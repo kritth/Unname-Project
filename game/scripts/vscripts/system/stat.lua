@@ -6,6 +6,42 @@ local HEALTH_PER_STRENGTH_CONSTANT = 20
 local ENGINE_MANA_PER_INTELLECT_CONSTANT = 12 -- Defined by the game
 local MANA_PER_INTELLECT_CONSTANT = 15
 
+-- Attaching necessary system
+local ability_name = "teve_stat"
+local mod = {}
+mod[1] = "modifier_negate_health"
+mod[2] = "modifier_negate_armor"
+mod[3] = "modifier_negate_mana"
+mod[4] = "modifier_health_regen"
+mod[5] = "modifier_mana_regen"
+mod[6] = "modifier_refund_health"
+
+function Stat:Attach(unit)
+	if unit then
+		unit.stat = Stat:new( unit:entindex() )
+		
+		-- In order for caster to become correct unit
+		unit:AddAbility(ability_name)
+		local ability = unit:FindAbilityByName(ability_name)
+		if ability ~= nil then
+			ability:SetLevel(1)
+			for k, v in pairs(mod) do
+				ability:ApplyDataDrivenModifier(unit, unit, v, { duration = -1 })
+			end
+		end
+		
+		unit:RemoveAbility(ability_name)
+	end
+end
+
+function Stat:Detach(unit)
+	if unit then
+		for k, v in pairs(mod) do
+			unit:RemoveModifierByName(v)
+		end
+	end
+end
+
 function Stat:new(entindex)
 	local newStat = { }
 	newStat.index = entindex
@@ -112,7 +148,8 @@ function update_health( keys )
 	if unit and unit.stat and unit.stat.cur_health > 0 then
 		unit:SetHealth((unit.stat.cur_health / unit.stat.max_health) * 100)
 	else
-		UTIL_RemoveImmediate(unit)
+		Stat:Detach(unit)
+		unit:ForceKill(false)
 	end
 end
 
@@ -166,7 +203,7 @@ function negate_health_gain( keys )
 			end
 		end
 			
-			-- Cleanup
+		-- Cleanup
 		UTIL_RemoveImmediate(healthUpdater)
 		healthUpdater = nil
 		update_max_health( unit.stat )
