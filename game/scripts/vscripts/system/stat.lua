@@ -278,12 +278,6 @@ function negate_health_gain( keys )
 	unit.stat.strBonus = unit:GetStrength()	
 end
 
-function reduce_strength( keys )
-	local unit = keys.caster
-	local tmp_stat = unit.stat
-	
-end
-
 function negate_mana_gain( keys )
 	local unit = keys.caster
 	if not unit or not unit:IsHero() then return nil end
