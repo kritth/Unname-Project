@@ -142,7 +142,7 @@ end
 function DebugMap:OnUnitSpawned( keys )
 	local unit = EntIndexToHScript( keys.entindex )
 	if unit.cstat == nil and 
-		( -- List of dummies
+		( -- List of dummies exception
 			unit:GetUnitName() ~= "npc_dummy_unit" or
 			unit:GetUnitName() ~= "npc_dummy_spawner"
 		) then

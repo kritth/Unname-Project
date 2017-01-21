@@ -65,18 +65,20 @@ end
 
 -- This will modify regardless if player has it or not
 function Economy:ModifyResource( player_id, gold, shard )
-	GoldTracking[player_id] = GoldTracking[player_id] + gold
-	ShardTracking[player_id] = ShardTracking[player_id] + gold
-	
-	if GoldTracking[player_id] < 0 then
-		GoldTracking[player_id] = 0
-	elseif GoldTracking[player_id] > GOLD_UPPER_LIMIT then
-		GoldTracking[player_id] = GOLD_UPPER_LIMIT
-	end
-	
-	if ShardTracking[player_id] < 0 then
-		ShardTracking[player_id] = 0
-	elseif ShardTracking[player_id] > SHARD_UPPER_LIMIT then
-		ShardTracking[player_id] = SHARD_UPPER_LIMIT
+	if player_id and GoldTracking[player_id] then
+		GoldTracking[player_id] = GoldTracking[player_id] + gold
+		ShardTracking[player_id] = ShardTracking[player_id] + gold
+		
+		if GoldTracking[player_id] < 0 then
+			GoldTracking[player_id] = 0
+		elseif GoldTracking[player_id] > GOLD_UPPER_LIMIT then
+			GoldTracking[player_id] = GOLD_UPPER_LIMIT
+		end
+		
+		if ShardTracking[player_id] < 0 then
+			ShardTracking[player_id] = 0
+		elseif ShardTracking[player_id] > SHARD_UPPER_LIMIT then
+			ShardTracking[player_id] = SHARD_UPPER_LIMIT
+		end
 	end
 end

@@ -44,7 +44,22 @@
 		{
 			"Passive"					"1"
 			"IsPurgable"				"0"
-			"IsHidden"					"1"
+			"IsHidden"					"0"
+			
+			"ThinkInterval"				"0.33"		// since this doesn't have to be in real time
+			"OnIntervalThink"
+			{
+				"RunScript"
+				{
+					"ScriptFile"					"system/stat.lua"
+					"Function"						"negate_armor"
+				}
+			}
+			
+			"Properties"
+			{
+				"MODIFIER_PROPERTY_PHYSICAL_ARMOR_BONUS"	"-1"
+			}
 		}
 		
 		"modifier_negate_mana"

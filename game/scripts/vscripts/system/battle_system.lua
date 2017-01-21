@@ -57,10 +57,13 @@ function DealDamage( tab )
 	local actual_damage = GetDamage(damage, damage_type, armor_type)
 	actual_damage = GetResistance(actual_damage, damage_type, victim.stat)
 	
-	print(victim:GetUnitName() .. ": " .. victim.stat.cur_health .. "/" .. victim.stat.max_health .. " getting " .. actual_damage .. " damage")
+	-- print(victim:GetUnitName() .. ": " .. victim.stat.cur_health .. "/" .. victim.stat.max_health .. " getting " .. actual_damage .. " damage")
 	
 	-- Placeholder system, not taking armor into consideration
 	victim.stat.cur_health = victim.stat.cur_health - actual_damage
+	
+	-- Add to limitbreak
+	Stat:AddLimitBreak(victim:GetPlayerOwnerID(), actual_damage)
 end
 
 -- Deduct mana

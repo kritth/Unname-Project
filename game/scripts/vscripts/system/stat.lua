@@ -5,6 +5,10 @@ local ENGINE_HEALTH_PER_STRENGTH_CONSTANT = 20 -- Defined by the game
 local HEALTH_PER_STRENGTH_CONSTANT = 20
 local ENGINE_MANA_PER_INTELLECT_CONSTANT = 12 -- Defined by the game
 local MANA_PER_INTELLECT_CONSTANT = 15
+local ENGINE_AGILITY_PER_ARMOR_CONSTANT = 7 -- Defined by the game
+local AGILITY_PER_ARMOR_CONSTANT = 12
+
+local LIMIT_BREAK_THRESHOLD = 100000
 
 -- Attaching necessary system
 local ability_name = "teve_stat"
@@ -15,6 +19,9 @@ mod[3] = "modifier_negate_mana"
 mod[4] = "modifier_health_regen"
 mod[5] = "modifier_mana_regen"
 mod[6] = "modifier_refund_health"
+
+-- Limit break
+local limit_break = { }
 
 function Stat:Attach(unit)
 	if unit then
@@ -31,6 +38,14 @@ function Stat:Attach(unit)
 		end
 		
 		unit:RemoveAbility(ability_name)
+		
+		-- Adding limit break
+		local player_id = unit:GetPlayerOwnerID()
+		if not limit_break[player_id] then
+			limit_break[player_id] = { }
+			limit_break[player_id].enable = false
+			limit_break[player_id].damage_taken = 0
+		end
 	end
 end
 
@@ -39,6 +54,18 @@ function Stat:Detach(unit)
 		for k, v in pairs(mod) do
 			unit:RemoveModifierByName(v)
 		end
+	end
+end
+
+function Stat:AddLimitBreak(player_id, damage)
+	if limit_break[player_id] and limit_break[player_id].enable == true then
+		if limit_break[player_id].damage_taken < LIMIT_BREAK_THRESHOLD then
+			limit_break[player_id].damage_taken = limit_break[player_id].damage_taken + damage
+		else
+			limit_break[player_id].damage_taken = LIMIT_BREAK_THRESHOLD
+		end
+		
+		-- print ("Current limit break meter: " .. limit_break[player_id].damage_taken .. "/" .. LIMIT_BREAK_THRESHOLD)
 	end
 end
 
@@ -262,4 +289,27 @@ function negate_mana_gain( keys )
 	unit.intBonus = unit:GetIntellect()
 end
 
+function negate_armor( keys )
+	local unit = keys.caster
+	
+	if unit then
+		local new_armor = unit:GetPhysicalArmorBaseValue()
+	
+		-- Include agility check if it is hero
+		if unit:IsHero() then
+			new_armor = new_armor + math.floor(unit:GetAgility() / ENGINE_AGILITY_PER_ARMOR_CONSTANT) + 1
+		end
+		
+		if not unit.negate_armor or unit.negate_armor ~= new_armor then
+			unit.negate_armor = new_armor
+			unit:SetModifierStackCount(mod[2], unit, unit.negate_armor)
+			
+			if unit:IsHero() then
+				unit.armor = unit:GetPhysicalArmorBaseValue() + math.floor(unit:GetAgility() / AGILITY_PER_ARMOR_CONSTANT)
+			else
+				unit.armor = new_armor
+			end
+		end
+	end
+end
 return Stat
