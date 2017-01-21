@@ -9,6 +9,7 @@ local ENGINE_AGILITY_PER_ARMOR_CONSTANT = 7 -- Defined by the game
 local AGILITY_PER_ARMOR_CONSTANT = 12
 
 local LIMIT_BREAK_THRESHOLD = 100000
+local TEMP_HEALTH_BUFFER = 1000000
 
 -- Attaching necessary system
 local ability_name = "teve_stat"
@@ -54,6 +55,7 @@ function Stat:Detach(unit)
 		for k, v in pairs(mod) do
 			unit:RemoveModifierByName(v)
 		end
+		unit.stat = nil
 	end
 end
 
@@ -94,6 +96,8 @@ function Stat:new(entindex)
 		newStat.base_mana = newStat.unit:GetMaxMana()
 		newStat.cur_mana = newStat.base_mana
 		newStat.max_mana = newStat.base_mana
+		
+		newStat.unit:SetBaseMaxHealth(100)
 	end
 	
 	-- Set resistance value
@@ -168,15 +172,48 @@ function update_health( keys )
 	local health_regen_per_tick = unit:GetHealthRegen() / tick_amount
 	
 	-- Do regen
-	if unit and unit.stat and unit.stat.cur_health < unit.stat.max_health then
-		unit.stat.cur_health = unit.stat.cur_health + health_regen_per_tick
-	end
-	
-	if unit and unit.stat and unit.stat.cur_health > 0 then
-		unit:SetHealth((unit.stat.cur_health / unit.stat.max_health) * 100)
-	else
-		Stat:Detach(unit)
-		unit:ForceKill(false)
+	if unit and unit.stat then
+		if unit.stat.cur_health < unit.stat.max_health and health_regen_per_tick > 0 then
+			unit.stat.cur_health = unit.stat.cur_health + health_regen_per_tick
+		end
+		
+		if unit.stat.cur_health > unit.stat.max_health then
+			unit.stat.cur_health = unit.stat.max_health
+		end
+		
+		if unit:IsHero() then
+			-- print(unit.stat.cur_health .. "/" .. unit.stat.max_health)
+		end
+		
+		if unit.stat.cur_health > 0 then
+			unit:SetHealth((unit.stat.cur_health / unit.stat.max_health) * 100)
+			
+			if not unit:IsAlive() then
+				unit:SetBaseMaxHealth(TEMP_HEALTH_BUFFER)
+				unit:SetMaxHealth(TEMP_HEALTH_BUFFER)
+				unit:SetHealth(TEMP_HEALTH_BUFFER)
+				
+				-- Modifier values
+				local bitTable = {32768, 16384, 8192, 4096, 2048, 1024, 512,256,128,64,32,16,8,4,2,1}
+		 
+				-- Gets the list of modifiers on the hero and loops through removing and health modifier
+				local modCount = unit:GetModifierCount()
+				for i = 0, modCount do
+					for u = 1, #bitTable do
+						local val = bitTable[u]
+						if unit:GetModifierNameByIndex(i) == "modifier_health_mod_" .. val  then
+							unit:RemoveModifierByName("modifier_health_mod_" .. val)
+						end
+					end
+				end
+				
+				unit.strBonus = 0
+				unit:SetMaxHealth(100)
+			end
+		else
+			Stat:Detach(unit)
+			unit:ForceKill(false)
+		end
 	end
 end
 
@@ -194,17 +231,18 @@ end
 
 function negate_health_gain( keys )
 	local unit = keys.caster
+	
 	if not unit or not unit:IsHero() then return nil end
 	
 	local strength = unit:GetStrength()
  
 	--Check if strBonus is stored on hero, if not set it to 0
-	if unit.strBonus == nil then
-		unit.strBonus = 0
+	if unit.stat.strBonus == nil then
+		unit.stat.strBonus = 0
 	end
 	
 	-- If player strength is different this time around, start the adjustment
-	if strength ~= unit.strBonus then
+	if strength ~= unit.stat.strBonus then
 		-- Modifier values
 		local bitTable = {32768, 16384, 8192, 4096, 2048, 1024, 512,256,128,64,32,16,8,4,2,1}
  
@@ -237,7 +275,13 @@ function negate_health_gain( keys )
 	end
 	
 	-- Updates the stored strength bonus value for next timer cycle
-	unit.strBonus = unit:GetStrength()	
+	unit.stat.strBonus = unit:GetStrength()	
+end
+
+function reduce_strength( keys )
+	local unit = keys.caster
+	local tmp_stat = unit.stat
+	
 end
 
 function negate_mana_gain( keys )
@@ -247,12 +291,12 @@ function negate_mana_gain( keys )
 	local intellect = unit:GetIntellect()
  
 	--Check if strBonus is stored on hero, if not set it to 0
-	if unit.intBonus == nil then
-		unit.intBonus = 0
+	if unit.stat.intBonus == nil then
+		unit.stat.intBonus = 0
 	end
 	
 	-- If player strength is different this time around, start the adjustment
-	if intellect ~= unit.intBonus then
+	if intellect ~= unit.stat.intBonus then
 		-- Modifier values
 		local bitTable = {32768, 16384, 8192, 4096, 2048, 1024, 512,256,128,64,32,16,8,4,2,1}
  
@@ -286,7 +330,7 @@ function negate_mana_gain( keys )
 	end
 		
 	-- Updates the stored strength bonus value for next timer cycle
-	unit.intBonus = unit:GetIntellect()
+	unit.stat.intBonus = unit:GetIntellect()
 end
 
 function negate_armor( keys )
@@ -300,16 +344,17 @@ function negate_armor( keys )
 			new_armor = new_armor + math.floor(unit:GetAgility() / ENGINE_AGILITY_PER_ARMOR_CONSTANT) + 1
 		end
 		
-		if not unit.negate_armor or unit.negate_armor ~= new_armor then
-			unit.negate_armor = new_armor
-			unit:SetModifierStackCount(mod[2], unit, unit.negate_armor)
+		if not unit.stat.negate_armor or unit.stat.negate_armor ~= new_armor then
+			unit.stat.negate_armor = new_armor
+			unit:SetModifierStackCount(mod[2], unit, unit.stat.negate_armor)
 			
 			if unit:IsHero() then
-				unit.armor = unit:GetPhysicalArmorBaseValue() + math.floor(unit:GetAgility() / AGILITY_PER_ARMOR_CONSTANT)
+				unit.stat.armor = unit:GetPhysicalArmorBaseValue() + math.floor(unit:GetAgility() / AGILITY_PER_ARMOR_CONSTANT)
 			else
-				unit.armor = new_armor
+				unit.stat.armor = new_armor
 			end
 		end
 	end
 end
+
 return Stat

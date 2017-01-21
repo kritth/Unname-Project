@@ -4,6 +4,7 @@ require( 'system/battle_system' )
 require( 'system/stat' )
 require( 'system/camp_spawner' )
 require( 'system/economy_system' )
+require( 'system/item_system' )
 require( 'level/debug_map' )
 
 if ORPGGameMode == nil then

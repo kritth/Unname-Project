@@ -3,6 +3,131 @@
 {
 
 
+	//Start of file dummy_item.txt
+	"dummy_item_1" 
+	{
+	    "ID"           "1100"
+	    "BaseClass"    "item_datadriven"
+	    "AbilityTextureName" "item_rapier"
+	    "Model"        "models/props_gameplay/recipe.vmdl" 
+	    "Effect"       "particles/generic_gameplay/dropped_item.vpcf"
+	    "ItemQuality"  "artifact"
+	
+	    "ItemCost"     "322"
+	    "ItemKillable" "0" 
+	    "ItemSellable" "1"
+	    "ItemPurchasable" "1"
+	    "ItemDroppable" "1"
+	    "ItemShareability" "ITEM_NOT_SHAREABLE"
+	
+	    "SideShop"     "1" 
+	    "SecretShop"   "0"
+	
+	    "ItemStackable" "1"
+	    "ItemPermanent" "1"
+	    "ItemDisassembleRule" "DOTA_ITEM_DISASSEMBLE_ALWAYS"
+	
+	    "AbilitySpecial"
+	    {
+			"01"
+			{
+				"var_type"		"FIELD_INTEGER"
+				"item_type"		"0"
+			}
+	        "02"
+	        {
+	            "var_type"      "FIELD_INTEGER"
+	            "bonus_stat"    "1500"
+	        }
+	    }
+	
+	    "Modifiers"
+	    {
+	        "modifier_item_custom_1"
+	        {
+	            "Passive"  "1"
+	            "IsHidden" "1" 
+	            "Attributes" "MODIFIER_ATTRIBUTE_MULTIPLE"
+	            "Properties"
+	            {
+	                "MODIFIER_PROPERTY_STATS_STRENGTH_BONUS" "%bonus_stat"
+	            }
+				
+				"OnDestroy"
+				{
+					"RunScript"
+					{
+						"ScriptFile"					"system/stat.lua"
+						"Function"						"reduce_strength"
+					}
+				}
+	        } 
+	    }
+	}
+	"dummy_item_2" 
+	{
+	    "ID"           "1100"
+	    "BaseClass"    "item_datadriven"
+	    "AbilityTextureName" "item_rapier"
+	    "Model"        "models/props_gameplay/recipe.vmdl" 
+	    "Effect"       "particles/generic_gameplay/dropped_item.vpcf"
+	    "ItemQuality"  "artifact"
+	
+	    "ItemCost"     "200"
+	    "ItemKillable" "0" 
+	    "ItemSellable" "1"
+	    "ItemPurchasable" "1"
+	    "ItemDroppable" "1"
+	    "ItemShareability" "ITEM_NOT_SHAREABLE"
+	
+	    "SideShop"     "1" 
+	    "SecretShop"   "0"
+	
+	    "ItemStackable" "1"
+	    "ItemPermanent" "1"
+	    "ItemDisassembleRule" "DOTA_ITEM_DISASSEMBLE_ALWAYS"
+	
+	    "AbilitySpecial"
+	    {
+			"01"
+			{
+				"var_type"		"FIELD_INTEGER"
+				"item_type"		"4"
+			}
+	        "02"
+	        {
+	            "var_type"      "FIELD_INTEGER"
+	            "bonus_stat"    "100"
+	        }
+	    }
+	
+	    "Modifiers"
+	    {
+	        "modifier_item_custom_2"
+	        {
+	            "Passive"  "1"
+	            "IsHidden" "1" 
+	            "Attributes" "MODIFIER_ATTRIBUTE_MULTIPLE"
+	            "Properties"
+	            {
+	                "MODIFIER_PROPERTY_STATS_AGILITY_BONUS" "%bonus_stat"
+	            }
+	        } 
+			"modifier_item_custom_3"
+	        {
+	            "Passive"  "1"
+	            "IsHidden" "1" 
+	            "Attributes" "MODIFIER_ATTRIBUTE_MULTIPLE"
+	            "Properties"
+	            {
+	                "MODIFIER_PROPERTY_STATS_INTELLECT_BONUS" "%bonus_stat"
+	            }
+	        } 
+	    }
+	} 
+	//End of file dummy_item.txt
+
+
 	//Start of file item_modifier.txt
 	"item_health_modifier"
 	{

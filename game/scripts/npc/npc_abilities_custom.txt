@@ -751,7 +751,7 @@
 			{
 				"Passive"					"1"
 				"IsPurgable"				"0"
-				"IsHidden"					"0"
+				"IsHidden"					"1"
 				
 				"ThinkInterval"				"0.33"		// since this doesn't have to be in real time
 				"OnIntervalThink"

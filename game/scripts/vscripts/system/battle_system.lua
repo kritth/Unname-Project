@@ -161,7 +161,6 @@ function GetDamage(damage, damage_type, armor_type)
 		elseif armor_type == TEVE_ARMOR_DIVINE then
 			actual_damage = damage
 		end
-		actual_damage = 0
 	elseif damage_type == TEVE_MAGICAL_DAMAGE_TYPE_MAGIC then
 		if armor_type == TEVE_ARMOR_LIGHT then
 			actual_damage = damage

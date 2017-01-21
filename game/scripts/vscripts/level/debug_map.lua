@@ -37,6 +37,10 @@ function DebugMap:AddDebugMapCommands()
 			return DebugMap:SpendResource()
 		end, "Spend resource", FCVAR_CHEAT
 	)
+	Convars:RegisterCommand("add_items", function( cmd )
+			return DebugMap:AddDebugItems()
+		end, "Add debug items", FCVAR_CHEAT
+	)
 end
 
 function DebugMap:DamageSelf()
@@ -93,6 +97,12 @@ function DebugMap:SpendResource()
 	Economy:ModifyResource(0, -100, -100)
 end
 
+function DebugMap:AddDebugItems()
+	local hero = PlayerResource:GetPlayer( tonumber(0) ):GetAssignedHero()
+	hero:AddItemByName("dummy_item_1")
+	hero:AddItemByName("dummy_item_2")
+end
+
 -- Transferable codes
 
 function DebugMap:InitGameMode()
@@ -122,7 +132,7 @@ function DebugMap:InitGameMode()
 	GameRules:SetGoldPerTick(0)
 	mode:SetLoseGoldOnDeath(false)
 	
-	-- Battle system setup
+	-- System setup
 	ListenToGameEvent( "npc_spawned", Dynamic_Wrap( DebugMap, "OnUnitSpawned" ), self )
 	
 	-- Debug command added
@@ -139,16 +149,21 @@ function DebugMap:OnGameInProgress()
 	end
 end
 
+function DebugMap:SortItems(keys)
+	print("Test")
+end
+
 function DebugMap:OnUnitSpawned( keys )
 	local unit = EntIndexToHScript( keys.entindex )
-	if unit.cstat == nil and 
-		( -- List of dummies exception
+	print("unit spawned")
+	unit.stat = nil
+	if -- List of dummies exception
 			unit:GetUnitName() ~= "npc_dummy_unit" or
-			unit:GetUnitName() ~= "npc_dummy_spawner"
-		) then
+			unit:GetUnitName() ~= "npc_dummy_spawner" or
+			unit:IsItem() then
 		-- Attach stat
 		Stat:Attach(unit)
-		
+
 		-- Initialize economy system for player if not existed
 		Economy:AddResource(unit:GetPlayerOwnerID())
 	end
