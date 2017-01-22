@@ -33,7 +33,7 @@ function UnitTakeDamage( event )
 	tab.victim = target
 	tab.attacker = attacker
 	
-	if attacker then
+	if attacker and attacker.stat then
 		if ability ~= nil then
 			tab.damage = ability:GetAbilityDamage()
 			tab.damage_type = ability:GetSpecialValueFor("DamageType")

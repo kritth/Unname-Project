@@ -24,6 +24,9 @@ mod[6] = "modifier_refund_health"
 -- Limit break
 local limit_break = { }
 
+-- Modifier values
+local bitTable = {32768, 16384, 8192, 4096, 2048, 1024, 512,256,128,64,32,16,8,4,2,1}
+
 function Stat:Attach(unit)
 	if unit then
 		unit.stat = Stat:new( unit:entindex() )
@@ -173,7 +176,7 @@ function update_health( keys )
 	
 	-- Do regen
 	if unit and unit.stat then
-		if unit.stat.cur_health < unit.stat.max_health and health_regen_per_tick > 0 then
+		if unit.stat.cur_health < unit.stat.max_health then
 			unit.stat.cur_health = unit.stat.cur_health + health_regen_per_tick
 		end
 		
@@ -181,33 +184,18 @@ function update_health( keys )
 			unit.stat.cur_health = unit.stat.max_health
 		end
 		
-		if unit:IsHero() then
-			-- print(unit.stat.cur_health .. "/" .. unit.stat.max_health)
-		end
-		
 		if unit.stat.cur_health > 0 then
 			unit:SetHealth((unit.stat.cur_health / unit.stat.max_health) * 100)
 			
-			if not unit:IsAlive() then
+			if not unit:IsAlive() or unit:GetMaxHealth() > 100 then
 				unit:SetBaseMaxHealth(TEMP_HEALTH_BUFFER)
 				unit:SetMaxHealth(TEMP_HEALTH_BUFFER)
 				unit:SetHealth(TEMP_HEALTH_BUFFER)
 				
-				-- Modifier values
-				local bitTable = {32768, 16384, 8192, 4096, 2048, 1024, 512,256,128,64,32,16,8,4,2,1}
-		 
-				-- Gets the list of modifiers on the hero and loops through removing and health modifier
-				local modCount = unit:GetModifierCount()
-				for i = 0, modCount do
-					for u = 1, #bitTable do
-						local val = bitTable[u]
-						if unit:GetModifierNameByIndex(i) == "modifier_health_mod_" .. val  then
-							unit:RemoveModifierByName("modifier_health_mod_" .. val)
-						end
-					end
-				end
+				remove_mod(unit, "modifier_health_mod_")
+				unit.stat.strBonus = 0
 				
-				unit.strBonus = 0
+				unit:SetBaseMaxHealth(100)
 				unit:SetMaxHealth(100)
 			end
 		else
@@ -222,11 +210,31 @@ function update_mana( keys )
 	local tick_amount = 1.00 / 0.03
 	local mana_regen_per_tick = (unit:GetStatsBasedManaRegen() + unit:GetPercentageBasedManaRegen()) / tick_amount
 	-- Do regen
-	if unit and unit.stat and unit.stat.cur_mana < unit.stat.max_mana then
-		unit.stat.cur_mana = unit.stat.cur_mana + mana_regen_per_tick
+	if unit and unit.stat then
+		if unit.stat.cur_mana < unit.stat.max_mana then
+			unit.stat.cur_mana = unit.stat.cur_mana + mana_regen_per_tick
+		end
+		
+		if unit.stat.cur_mana > unit.stat.max_mana then
+			unit.stat.cur_mana = unit.stat.max_mana
+		end
+		
+		if unit.stat.cur_mana > 0 then
+			unit:SetMana((unit.stat.cur_mana / unit.stat.max_mana) * 100)
+			
+			if unit:GetMana() < 0 or unit:GetMaxMana() < 0 or unit:GetMaxMana() > 100 then
+				unit:SetMana(100)
+			
+				remove_mod(unit, "modifier_mana_mod_")
+				unit.stat.intBonus = 0
+				
+				unit:SetMana(0)
+			end
+		else
+			unit.stat.cur_mana = 0
+			unit:SetMana(0)
+		end
 	end
-	
-	unit:SetMana((unit.stat.cur_mana / unit.stat.max_mana) * 100)
 end
 
 function negate_health_gain( keys )
@@ -243,34 +251,8 @@ function negate_health_gain( keys )
 	
 	-- If player strength is different this time around, start the adjustment
 	if strength ~= unit.stat.strBonus then
-		-- Modifier values
-		local bitTable = {32768, 16384, 8192, 4096, 2048, 1024, 512,256,128,64,32,16,8,4,2,1}
- 
-		-- Gets the list of modifiers on the hero and loops through removing and health modifier
-		local modCount = unit:GetModifierCount()
-		for i = 0, modCount do
-			for u = 1, #bitTable do
-				local val = bitTable[u]
-				if unit:GetModifierNameByIndex(i) == "modifier_health_mod_" .. val  then
-					unit:RemoveModifierByName("modifier_health_mod_" .. val)
-				end
-			end
-		end
-		
-		-- Creates temporary item to steal the modifiers from
-		local healthUpdater = CreateItem("item_health_modifier", nil, nil) 
-		for p=1, #bitTable do
-			local val = bitTable[p]
-			local count = math.floor(strength / val)
-			if count >= 1 then
-				healthUpdater:ApplyDataDrivenModifier(unit, unit, "modifier_health_mod_" .. val, {})
-				strength = strength - val
-			end
-		end
-			
-		-- Cleanup
-		UTIL_RemoveImmediate(healthUpdater)
-		healthUpdater = nil
+		remove_mod(unit, "modifier_health_mod_")
+		strength = add_mod(unit, "modifier_health_mod_", "item_health_modifier", strength)
 		update_max_health( unit.stat )
 	end
 	
@@ -291,35 +273,8 @@ function negate_mana_gain( keys )
 	
 	-- If player strength is different this time around, start the adjustment
 	if intellect ~= unit.stat.intBonus then
-		-- Modifier values
-		local bitTable = {32768, 16384, 8192, 4096, 2048, 1024, 512,256,128,64,32,16,8,4,2,1}
- 
-		-- Gets the list of modifiers on the hero and loops through removing and mana modifier
-		local modCount = unit:GetModifierCount()
-		for i = 0, modCount do
-			for u = 1, #bitTable do
-				local val = bitTable[u]
-				if unit:GetModifierNameByIndex(i) == "modifier_mana_mod_" .. val  then
-					unit:RemoveModifierByName("modifier_mana_mod_" .. val)
-				end
-			end
-		end
-		
-		-- Creates temporary item to steal the modifiers from
-		local manaUpdater = CreateItem("item_mana_modifier", nil, nil) 
-		for p=1, #bitTable do
-			local val = bitTable[p]
-			local count = math.floor(intellect / val)
-			if count >= 1 then
-				manaUpdater:ApplyDataDrivenModifier(unit, unit, "modifier_mana_mod_" .. val, {})
-				intellect = intellect - val
-			end
-		end
-			
-		-- Cleanup
-		UTIL_RemoveImmediate(manaUpdater)
-		manaUpdater = nil
-		
+		remove_mod(unit, "modifier_mana_mod_")
+		intellect = add_mod(unit, "modifier_mana_mod_", "item_mana_modifier", intellect)
 		update_max_mana( unit.stat )
 	end
 		
@@ -349,6 +304,40 @@ function negate_armor( keys )
 			end
 		end
 	end
+end
+
+function remove_mod(unit, mod_prefix)
+	-- Gets the list of modifiers on the hero and loops through removing and health modifier
+	local modCount = unit:GetModifierCount()
+	for i = 0, modCount do
+		for u = 1, #bitTable do
+			local val = bitTable[u]
+			if unit:GetModifierNameByIndex(i) == mod_prefix .. val  then
+				unit:RemoveModifierByName(mod_prefix .. val)
+			end
+		end
+	end
+end
+
+function add_mod(unit, mod_prefix, item_name, attribute_val)
+	local attr = attribute_val
+	
+	-- Creates temporary item to steal the modifiers from
+	local updater = CreateItem(item_name, nil, nil) 
+	for p=1, #bitTable do
+		local val = bitTable[p]
+		local count = math.floor(attr / val)
+		if count >= 1 then
+			updater:ApplyDataDrivenModifier(unit, unit, mod_prefix .. val, {})
+			attr = attr - val
+		end
+	end
+	
+	-- Cleanup
+	UTIL_RemoveImmediate(updater)
+	updater = nil
+	
+	return attr
 end
 
 return Stat

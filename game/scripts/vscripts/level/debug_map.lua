@@ -99,8 +99,9 @@ end
 
 function DebugMap:AddDebugItems()
 	local hero = PlayerResource:GetPlayer( tonumber(0) ):GetAssignedHero()
-	hero:AddItemByName("dummy_item_1")
-	hero:AddItemByName("dummy_item_2")
+	hero:AddItemByName("item_dummy_1_datadriven")
+	hero:AddItemByName("item_dummy_quest_1_datadriven")
+	hero:AddItemByName("item_abyssal_blade")
 end
 
 -- Transferable codes
@@ -135,6 +136,9 @@ function DebugMap:InitGameMode()
 	-- System setup
 	ListenToGameEvent( "npc_spawned", Dynamic_Wrap( DebugMap, "OnUnitSpawned" ), self )
 	
+	-- Item manager set up
+	ItemManager:Init()
+	
 	-- Debug command added
 	DebugMap:AddDebugMapCommands()
 end
@@ -147,10 +151,6 @@ function DebugMap:OnGameInProgress()
 		Economy:Init()
 		once = true
 	end
-end
-
-function DebugMap:SortItems(keys)
-	print("Test")
 end
 
 function DebugMap:OnUnitSpawned( keys )
